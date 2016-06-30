@@ -19,6 +19,13 @@ exports.getAlphabet = (callback) => {
             if (reply === 1) {
                 console.log('Found Key in Redis');
                 // After all data is returned, return results
+                client.smembers(hash, (error, members) => {
+                    if (error) {
+                        return callback(error);
+                    }
+                    console.log(members);
+                    return callback(null, members);
+                });
                 return callback(null, 'Found Key in Redis');
             }
             if (reply === 0) {
