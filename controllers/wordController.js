@@ -1,8 +1,9 @@
 const word = require('../models/wordManager');
 
 exports.getPhonetic = (req, res) => {
-    if (typeof req.params.id !== 'undefined' && req.params.id) {
-        word.getPhonetic(req.params.id, (err, data) => {
+    if ((typeof req.params.language !== 'undefined' && req.params.language) &&
+        (typeof req.params.word !== 'undefined' && req.params.word)) {
+        word.getPhonetic(req.params.language, req.params.word, (err, data) => {
             if (err) {
                 return console.log(err);
             }

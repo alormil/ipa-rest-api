@@ -1,6 +1,6 @@
 const redis = require('redis');
 
-exports.getAlphabet = (callback) => {
+exports.getAlphabet = (language, callback) => {
     // Get a Redis client from the connection pool
     const client = redis.createClient();
     const result = [];
@@ -8,7 +8,7 @@ exports.getAlphabet = (callback) => {
     // Connect to Redis Server
     client.on('connect', () => {
         // This is the hash that will be stored in Redis
-        const hash = 'fr:alphabet';
+        const hash = `${language}:alphabet`;
 
         // Check if the key is already present in redis
         // if the product is there already we skip it

@@ -2,14 +2,14 @@ const redis = require('redis');
 const request = require('request');
 const cheerio = require('cheerio');
 
-exports.getPhonetic = (id, callback) => {
+exports.getPhonetic = (language, word, callback) => {
     // Get a Redis client from the connection pool
     const client = redis.createClient();
 
     // Connect to Redis Server
     client.on('connect', () => {
         // This is the hash that will be stored in Redis
-        const key = `${id}`;
+        const key = `${language}:${word}`;
 
         // Check if the key is already present in redis
         // if the product is there already we skip it
