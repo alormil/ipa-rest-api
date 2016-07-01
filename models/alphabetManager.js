@@ -3,6 +3,7 @@ const redis = require('redis');
 exports.getAlphabet = (callback) => {
     // Get a Redis client from the connection pool
     const client = redis.createClient();
+    const result = [];
 
     // Connect to Redis Server
     client.on('connect', () => {
@@ -17,22 +18,25 @@ exports.getAlphabet = (callback) => {
                 return callback(err);
             }
             if (reply === 1) {
-                console.log('Found Key in Redis');
                 // After all data is returned, return results
-                client.smembers(hash, (error, members) => {
+                client.smembers(hash, (error, letters) => {
                     if (error) {
                         return callback(error);
                     }
-                    console.log(members);
-                    return callback(null, members);
+                    Object.keys(letters).forEach((index) => {
+                        client.hgetall(`${letters[index]}`, (error2, object) => {
+                            result.push(JSON.stringify(object));
+                            if (letters.length === result.length) {
+                                return callback(null, result);
+                            }
+                        });
+                    });
                 });
-                return callback(null, 'Found Key in Redis');
             }
             if (reply === 0) {
                 console.log('Alphabet not found');
                 return callback(null);
             }
-            return callback(null);
         });
     });
 };
