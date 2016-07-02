@@ -1,0 +1,12 @@
+application {
+  name = "ipa-rest-api"
+  type = "node"
+
+  dependency {
+    source = "./otto/redis"
+  }
+}
+
+customization {
+  node_version = "6.2.1"
+}
