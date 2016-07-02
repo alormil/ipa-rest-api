@@ -25,7 +25,7 @@ exports.getAlphabet = (language, callback) => {
                     }
                     Object.keys(letters).forEach((index) => {
                         client.hgetall(`${letters[index]}`, (error2, object) => {
-                            result.push(JSON.stringify(object));
+                            result.push(JSON.parse(JSON.stringify(object)));
                             if (letters.length === result.length) {
                                 return callback(null, result);
                             }
@@ -34,7 +34,6 @@ exports.getAlphabet = (language, callback) => {
                 });
             }
             if (reply === 0) {
-                console.log('Alphabet not found');
                 return callback(null);
             }
         });
