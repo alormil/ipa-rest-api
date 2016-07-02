@@ -10,15 +10,14 @@ exports.getAlphabet = (language, callback) => {
         // This is the hash that will be stored in Redis
         const hash = `${language}:alphabet`;
 
-        // Check if the key is already present in redis
-        // if the product is there already we skip it
-        // Otherwise we store it in Redis
+        // Check if the alphabet key is present in Redis
         client.exists(hash, (err, reply) => {
+            // If error occurs, return error
             if (err) {
                 return callback(err);
             }
+            // If Key is present, loop through each object and return result as JSON object
             if (reply === 1) {
-                // After all data is returned, return results
                 client.smembers(hash, (error, letters) => {
                     if (error) {
                         return callback(error);
@@ -33,6 +32,7 @@ exports.getAlphabet = (language, callback) => {
                     });
                 });
             }
+            // If key is not present return nothing
             if (reply === 0) {
                 return callback(null);
             }
