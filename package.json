@@ -5,9 +5,11 @@
   },
   "dependencies": {
     "cheerio": "^0.20.0",
+    "jsonwebtoken": "^7.0.1",
     "redis": "^2.6.2",
     "request": "^2.72.0",
-    "restify": "^4.1.1"
+    "restify": "^4.1.1",
+    "restify-jwt": "^0.4.0"
   },
   "description": "International Phonetic Alphabet RESTful API for french words",
   "devDependencies": {

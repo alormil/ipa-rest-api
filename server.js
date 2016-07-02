@@ -1,18 +1,39 @@
 const restify = require('restify');
+const restifyJWT = require('restify-jwt');
 const server = restify.createServer();
 const routes = require('./routes');
 const port = 3000;
 
-server.use(restify.fullResponse());
-server.use(restify.bodyParser());
-server.use(restify.queryParser());
+const redis = require('redis');
+const client = redis.createClient();
 
-server.listen(port, (err) => {
-    if (err) {
-        console.error(err);
-    }
+client.on('connect', () => {
+    const key = 'jwt:secret';
+
+    client.exists(key, (err, reply) => {
+        if (err || reply === 0) {
+            console.error('Cannot find JSON Web Token secret key');
+        }
+        if (reply === 1) {
+            client.get(key, (error, secretKey) => {
+                if (error) {
+                    console.error('Cannot find JSON Web Token secret key');
+                }
+                server.use(restifyJWT({ secret: secretKey }));
+                server.use(restify.fullResponse());
+                server.use(restify.bodyParser());
+                server.use(restify.queryParser());
+
+                server.listen(port, (errors) => {
+                    if (errors) {
+                        console.error(errors);
+                    }
+                });
+
+                routes(server);
+            });
+        }
+    });
 });
-
-routes(server);
 
 module.exports = server;
