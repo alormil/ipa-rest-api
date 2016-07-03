@@ -12,6 +12,9 @@ This project will consist of creating a REST API that will provide 2 things
 - Return the International Phonetic Alphabet (IPA)
 - Return the phonetic equivalent of a word
 
-As a reference we will use the IPA Alphabet listed on wikipedia : https://en.wikipedia.org/wiki/Help:IPA_for_French
+As a reference we will use the IPA Alphabet listed on wikipedia :
 
-We will also use WordReference.com in order to obtain the phonetic result of a word.
+- https://en.wikipedia.org/wiki/Help:IPA_for_English
+- https://en.wikipedia.org/wiki/Help:IPA_for_French
+
+We will also use collinsdictionary.com in order to obtain the phonetic result of a word.
