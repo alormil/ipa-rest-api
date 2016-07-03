@@ -2,32 +2,70 @@ const redis = require('redis');
 const request = require('request');
 const cheerio = require('cheerio');
 
-exports.getPhonetic = (language, word, callback) => {
+exports.getPhonetic = (lang, wordToTranslate, callback) => {
     // Get a Redis client from the connection pool
     const client = redis.createClient();
 
     // Connect to Redis Server
     client.on('connect', () => {
-        // This is the hash that will be stored in Redis
-        const key = `${language}:${word}`;
+        const key = `${lang}:${wordToTranslate}`;
 
-        // Check if the key is already present in redis
-        // if the product is there already we skip it
-        // Otherwise we store it in Redis
-        client.exists(key, (err, reply) => {
+        client.get(key, (err, result) => {
             if (err) {
                 return callback(err);
             }
-            if (reply === 1) {
-                console.log('Found Key in Redis');
+            // The word is cached in Redis
+            if (result !== null) {
+                const data = {
+                    language: lang,
+                    word: wordToTranslate,
+                    phonetic: result,
+                };
                 // After all data is returned, return results
-                return callback(null, 'Found Key in Redis');
+                return callback(null, data);
             }
-            if (reply === 0) {
-                console.log('Alphabet not found');
-                return callback(null);
+            // The word is not cached in Redis. Retrieve the info from WordReference.com
+            if (result === null) {
+                let langURL = '';
+                switch (lang) {
+                case 'fr':
+                    langURL = 'french-english';
+                    break;
+                default:
+                    langURL = 'english';
+                    break;
+                }
+                const url = `http://www.collinsdictionary.com/dictionary/${langURL}/${wordToTranslate}`;
+                request(url, (error, response, html) => {
+                    if (!error) {
+                        const $ = cheerio.load(html);
+                        const phoneticWords = $('span.pron').text();
+                        let phoneticWord = '';
+
+                        if (lang === 'fr') {
+                            const regExp = /\(([^)]+)\)/;
+                            const matches = regExp.exec(phoneticWords);
+                            phoneticWord = matches[1];
+                        }
+                        if (lang === 'en') {
+                            const string = phoneticWords.split(' ');
+                            phoneticWord = string[0];
+                        }
+                        phoneticWord = phoneticWord.replace(/(\r\n|\n|\r)/gm, '');
+                        phoneticWord = phoneticWord.replace(/ /g, '');
+                        phoneticWord = phoneticWord.trim();
+                        phoneticWord = phoneticWord.replace(/[|&;$%@<>()+]/g, '');
+                        const data = {
+                            language: lang,
+                            word: wordToTranslate,
+                            phonetic: phoneticWord,
+                        };
+                        client.set(key, phoneticWord);
+
+                        return callback(null, data);
+                    }
+                });
             }
-            return callback(null);
         });
     });
 };
