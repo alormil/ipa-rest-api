@@ -19,13 +19,25 @@ if (process.argv[2] !== null && process.argv.length > 2) {
                         console.error('Cannot find JSON Web Token secret key');
                     }
                     const expiresIn = {
-                        expiresIn: '7d',
+                        expiresIn: '1d',
                     };
                     const profile = {
                         usrEmail: email,
                     };
                     const token = jwt.sign(profile, secret, expiresIn);
                     console.log(`Please use this token: ${token}`);
+
+                    client.scard('jwt:tokens', (errors, numberOfTokes) => {
+                        if (errors) {
+                            console.error('Cannot add token to Redis');
+                        }
+                        client.sadd('jwt:tokens', `jwt:token:${numberOfTokes}`);
+                        const expireDate = new Date(Date.now() + 86400000);
+                        client.hmset(`jwt:token:${numberOfTokes}`,
+                            'email', email,
+                            'token', token,
+                            'expiryDate', expireDate.toISOString());
+                    });
                 });
             }
         });
