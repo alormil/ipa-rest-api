@@ -18,3 +18,80 @@ As a reference we will use the IPA Alphabet listed on wikipedia :
 - https://en.wikipedia.org/wiki/Help:IPA_for_French
 
 We will also use collinsdictionary.com in order to obtain the phonetic result of a word.
+
+### How do I get set up? ###
+
+1. Make sure you have Node JS installed (Download here: https://nodejs.org/en/download/current/)
+2. Make sure you have Redis installed (Download here: http://redis.io/download)
+3. Clone the repo into chosen directory and move to that directory
+4. Run the following commands
+```
+npm install
+redis-cli < data/alphabet_import.sh
+```
+5. Launch the Redis client using redis-cli and add a secret key that will be used for the JSON Web Tokens :
+```
+SET jwt:secret <enter secret key here>
+```
+6. Generate a JSON Web Token by running the following command with a desired email (This way you can restrict the API usage in order to prevent abuse)
+```
+scripts/token.js <enter email address>
+```
+The tokens and their information will be stored in redis, you can see the list of keys by accessing the set with name jwt:tokens.
+7. Start the app server by running the following command :
+```
+node server.js
+```
+8. You can make API calls in order to retrieve information (Make sure that for the request Header name to use Authorization and place Bearer before the Token. ).
+
+Some examples are :
+```
+GET localhost:3000/alphabet/fr
+```
+Which returns :
+```
+[
+  {
+    "IPA": "e",
+    "Examples": "clé, les, chez, aller, pied, journée",
+    "Type": "Oral vowels"
+  },
+  {
+    "IPA": "s",
+    "Examples": "sans, ça, assez",
+    "Type": "Consonants"
+  },
+  {
+    "IPA": "ˈ",
+    "Examples": "moyen [mwaˈjɛ̃]",
+    "Type": "Suprasegmentals"
+  },
+  ...
+```
+```
+GET localhost:3000/ipa/fr/ordinateur
+```
+Which returns :
+```
+{
+  "language": "fr",
+  "word": "ordinateur",
+  "phonetic": "ɔʀdinatœʀ"
+}
+```
+
+For local development, if you don't want to perform points 1 & 2, I experimented with Otto as a development tool (You can download it here : https://www.ottoproject.io/downloads.html).
+I was able to make the development environnment work following the following commands : https://github.com/hashicorp/otto/issues/496#issuecomment-230084747
+
+Then if ssh in the vagrant machine, you can basically execute the rest of the steps in the vagrant.
+
+* Dependencies
+
+All the package dependencies are located in package.json file
+
+## Authors
+Alain Lormil created the IPA Rest API.
+
+## License
+Copyright (c) 2015 Alain Lormil  
+Licensed under the MIT license.
