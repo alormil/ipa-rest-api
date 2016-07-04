@@ -1,7 +1,7 @@
 {
   "author": "Alain Lormil",
   "bugs": {
-    "url": "https://github.com/alormil/IPA-REST-API-FR/issues"
+    "url": "https://github.com/alormil/ipa-rest-api/issues"
   },
   "dependencies": {
     "cheerio": "^0.20.0",
@@ -11,7 +11,7 @@
     "restify": "^4.1.1",
     "restify-jwt": "^0.4.0"
   },
-  "description": "International Phonetic Alphabet RESTful API for french words",
+  "description": "International Phonetic Alphabet RESTful API for words",
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^2.13.1",
@@ -26,13 +26,13 @@
   "directories": {
     "test": "test"
   },
-  "homepage": "https://github.com/alormil/IPA-REST-API-FR#readme",
+  "homepage": "https://github.com/alormil/ipa-rest-api#readme",
   "license": "ISC",
   "main": "server.js",
   "name": "ipa-rest-api",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alormil/IPA-REST-API-FR.git"
+    "url": "git+https://github.com/alormil/ipa-rest-api.git"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --recursive --reporter spec"

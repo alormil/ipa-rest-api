@@ -7,18 +7,18 @@ exports.getAlphabet = (language, callback) => {
 
     // Connect to Redis Server
     client.on('connect', () => {
-        // This is the hash that will be stored in Redis
-        const hash = `${language}:alphabet`;
+        // This is the key is stored in Redis containing alphabet
+        const key = `${language}:alphabet`;
 
         // Check if the alphabet key is present in Redis
-        client.exists(hash, (err, reply) => {
+        client.exists(key, (err, reply) => {
             // If error occurs, return error
             if (err) {
                 return callback(err);
             }
-            // If Key is present, loop through each object and return result as JSON object
+            // If Key is present, loop through all members & return result as JSON object
             if (reply === 1) {
-                client.smembers(hash, (error, letters) => {
+                client.smembers(key, (error, letters) => {
                     if (error) {
                         return callback(error);
                     }
