@@ -83,7 +83,7 @@ Which returns :
 For local development, if you don't want to perform points 1 & 2, I experimented with Otto as a development tool (You can download it here : https://www.ottoproject.io/downloads.html).
 I was able to make the development environnment work following the following commands : https://github.com/hashicorp/otto/issues/496#issuecomment-230084747
 
-Then if ssh in the vagrant machine, you can basically execute the rest of the steps in the vagrant.
+Then if you ssh in the vagrant machine, you can basically execute the rest of the steps in the vagrant.
 
 * Dependencies
 
