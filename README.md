@@ -34,16 +34,25 @@ SET jwt:secret <enter secret key here>
 ```
 6. Generate a JSON Web Token by running the following command with a desired email (This way you can restrict the API usage in order to prevent abuse)
 ```
-scripts/token.js <enter email address>
+node scripts/token.js <enter email address>
 ```
 The tokens and their information will be stored in redis, you can see the list of keys by accessing the set with name jwt:tokens.
+
 7. Start the app server by running the following command :
 ```
 node server.js
 ```
-8. You can make API calls in order to retrieve information (Make sure that for the request Header name to use Authorization and place Bearer before the Token. ).
+8. You can make API calls in order to retrieve information. Make sure to add `Authorization` key to the header with the value `Bearer <token>` (`Bearer`, followed by a space, followed by your token.)
 
-Some examples are :
+Example :
+```
+$ curl -X GET  http://localhost:3000/ipa/en/hello -H 'Authorization: Bearer <token>'
+{"language":"en","word":"hello","phonetic":"heloʊhɛˈləʊ,"}
+```
+
+### API
+
+#### Alphabet
 ```
 GET localhost:3000/alphabet/fr
 ```
@@ -67,6 +76,8 @@ Which returns :
   },
   ...
 ```
+
+#### IPA
 ```
 GET localhost:3000/ipa/fr/ordinateur
 ```
